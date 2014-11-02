@@ -19,7 +19,7 @@
 
 #include "common/basic_types.h"
 
-class CToolApp {
+class ToolApp {
 public:
 	UInt32				run(int argc, char** argv);
 

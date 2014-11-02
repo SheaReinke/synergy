@@ -30,22 +30,22 @@
 #endif
 
 class IArchTaskBarReceiver;
-class CBufferedLogOutputter;
+class BufferedLogOutputter;
 class ILogOutputter;
-class CFileLogOutputter;
-class CScreen;
+class FileLogOutputter;
+class Screen;
 class IEventQueue;
-class CSocketMultiplexer;
+class SocketMultiplexer;
 
-typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const CBufferedLogOutputter*, IEventQueue* events);
+typedef IArchTaskBarReceiver* (*CreateTaskBarReceiverFunc)(const BufferedLogOutputter*, IEventQueue* events);
 
-class CApp : public IApp {
+class App : public IApp {
 public:
-	CApp(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, CArgsBase* args);
-	virtual ~CApp();
+	App(IEventQueue* events, CreateTaskBarReceiverFunc createTaskBarReceiver, ArgsBase* args);
+	virtual ~App();
 
 	// Returns args that are common between server and client.
-	CArgsBase& argsBase() const { return *m_args; }
+	ArgsBase& argsBase() const { return *m_args; }
 
 	// Prints the current compiled version.
 	virtual void version();
@@ -61,7 +61,7 @@ public:
 	int daemonMainLoop(int, const char**);
 
 	virtual void loadConfig() = 0;
-	virtual bool loadConfig(const CString& pathname) = 0;
+	virtual bool loadConfig(const String& pathname) = 0;
 
 	// A description of the daemon (used only on Windows).
 	virtual const char* daemonInfo() const = 0;
@@ -70,7 +70,7 @@ public:
 	// TODO: this is old C code - use inheritance to normalize
 	void (*m_bye)(int);
 
-	static CApp& instance() { assert(s_instance != nullptr); return *s_instance; }
+	static App& instance() { assert(s_instance != nullptr); return *s_instance; }
 
 	// If --log was specified in args, then add a file logger.
 	void setupFileLogging();
@@ -93,11 +93,11 @@ public:
 	
 	virtual IEventQueue* getEvents() const { return m_events; }
 
-	void				setSocketMultiplexer(CSocketMultiplexer* sm) { m_socketMultiplexer = sm; }
-	CSocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
+	void				setSocketMultiplexer(SocketMultiplexer* sm) { m_socketMultiplexer = sm; }
+	SocketMultiplexer*	getSocketMultiplexer() const { return m_socketMultiplexer; }
 
 private:
-	void				handleIpcMessage(const CEvent&, void*);
+	void				handleIpcMessage(const Event&, void*);
 
 protected:
 	void				initIpcClient();
@@ -109,17 +109,17 @@ protected:
 	IEventQueue*		m_events;
 
 private:
-	CArgsBase* m_args;
-	static CApp* s_instance;
-	CFileLogOutputter* m_fileLog;
+	ArgsBase* m_args;
+	static App* s_instance;
+	FileLogOutputter* m_fileLog;
 	CreateTaskBarReceiverFunc m_createTaskBarReceiver;
 	ARCH_APP_UTIL m_appUtil;
-	CIpcClient*			m_ipcClient;
-	CSocketMultiplexer*	m_socketMultiplexer;
+	IpcClient*			m_ipcClient;
+	SocketMultiplexer*	m_socketMultiplexer;
 };
 
 #if WINAPI_MSWINDOWS
-#define DAEMON_RUNNING(running_) CArchMiscWindows::daemonRunning(running_)
+#define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)
 #else
 #define DAEMON_RUNNING(running_)
 #endif

@@ -33,7 +33,7 @@ enum {
 };
 
 UInt32
-CToolApp::run(int argc, char** argv)
+ToolApp::run(int argc, char** argv)
 {
 	if (argc <= 1) {
 		std::cerr << "no args" << std::endl;
@@ -65,14 +65,14 @@ CToolApp::run(int argc, char** argv)
 }
 
 void
-CToolApp::premiumAuth()
+ToolApp::premiumAuth()
 {
-	CString credentials;
+	String credentials;
 	std::cin >> credentials;
 
 	size_t separator = credentials.find(':');
-	CString email = credentials.substr(0, separator);
-	CString password = credentials.substr(separator + 1, credentials.length());
+	String email = credentials.substr(0, separator);
+	String password = credentials.substr(separator + 1, credentials.length());
 			
 	std::stringstream ss;
 	ss << PREMIUM_AUTH_URL;
